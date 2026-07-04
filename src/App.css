@@ -1,0 +1,346 @@
+.app {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 28px 20px 40px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.controls h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--accent);
+}
+
+.tagline {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+
+.badges {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.engine-switch {
+  display: flex;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--panel);
+}
+
+.engine-switch button {
+  font: inherit;
+  font-size: 13px;
+  padding: 5px 14px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.engine-switch button.on {
+  background: var(--accent);
+  color: #241a0c;
+  font-weight: 600;
+}
+
+.record-btn {
+  font: inherit;
+  font-size: 13px;
+  padding: 5px 14px;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.record-btn.recording {
+  border-color: #b0402c;
+  background: #b0402c;
+  color: #fff;
+  animation: rec-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes rec-pulse {
+  50% { opacity: 0.7; }
+}
+
+.badge {
+  font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.volume {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.volume input {
+  accent-color: var(--accent);
+  width: 110px;
+}
+
+.fretboard {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.fret-numbers,
+.string-row {
+  display: grid;
+  grid-template-columns: 36px repeat(10, 1fr);
+  gap: 6px;
+  align-items: center;
+}
+
+.fret-numbers {
+  margin-bottom: 4px;
+}
+
+.fret-numbers span {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.string-row {
+  position: relative;
+  padding: 5px 0;
+}
+
+.string-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.string-line {
+  position: absolute;
+  left: 42px;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(#8a745a, #5d4c39);
+  border-radius: 1px;
+  z-index: 0;
+}
+
+.ringing .string-line {
+  background: linear-gradient(#c9a877, #8a745a);
+  animation: vibrate 0.09s linear infinite;
+}
+
+@keyframes vibrate {
+  0%   { transform: translateY(calc(-50% - 1px)); }
+  50%  { transform: translateY(calc(-50% + 1px)); }
+  100% { transform: translateY(calc(-50% - 1px)); }
+}
+
+.keycap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 2px 7px;
+  background: var(--key-bg);
+  border: 1px solid var(--key-border);
+  border-radius: 8px;
+  transition: background 60ms, border-color 60ms, transform 60ms;
+}
+
+.keycap.active {
+  background: var(--accent);
+  border-color: var(--accent-bright);
+  transform: translateY(1px);
+}
+
+.keycap.active .key-label,
+.keycap.active .note-label {
+  color: #241a0c;
+}
+
+.key-label {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.note-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.chord-panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 22px 16px 14px;
+}
+
+.chord-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+
+.chord-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 4px 12px;
+  background: var(--key-bg);
+  border: 1px solid var(--key-border);
+  border-radius: 10px;
+  transition: background 60ms, border-color 60ms, transform 60ms;
+}
+
+.chord-card.selected {
+  background: var(--accent);
+  border-color: var(--accent-bright);
+  transform: translateY(1px);
+}
+
+.chord-card.selected .chord-hotkey,
+.chord-card.selected .chord-name,
+.chord-card.selected .chord-roman {
+  color: #241a0c;
+}
+
+.chord-hotkey {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.chord-name {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.chord-roman {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.pluck-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.pluck-label {
+  font-size: 12px;
+  color: var(--muted);
+  width: 36px;
+}
+
+.pluck-key {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 0 5px;
+  width: 58px;
+  background: var(--key-bg);
+  border: 1px solid var(--key-border);
+  border-radius: 8px;
+  transition: background 60ms, border-color 60ms;
+}
+
+.pluck-key.active {
+  background: var(--accent);
+  border-color: var(--accent-bright);
+}
+
+.pluck-key.active .key-label,
+.pluck-key.active .note-label {
+  color: #241a0c;
+}
+
+.variant-key {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 5px 0 4px;
+  width: 52px;
+  background: var(--key-bg);
+  border: 1px solid var(--key-border);
+  border-radius: 8px;
+  transition: background 60ms, border-color 60ms;
+}
+
+.variant-key .key-label {
+  font-size: 12px;
+}
+
+.variant-key .note-label {
+  font-size: 11px;
+}
+
+.variant-key.active {
+  background: var(--accent);
+  border-color: var(--accent-bright);
+}
+
+.variant-key.active .key-label,
+.variant-key.active .note-label {
+  color: #241a0c;
+}
+
+.chord-help {
+  margin: 16px 2px 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.hints {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  background: var(--key-bg);
+  border: 1px solid var(--key-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--text);
+}
