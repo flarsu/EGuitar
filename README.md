@@ -30,6 +30,12 @@ npm install
 npm run dev
 ```
 
+## Play it now
+
+Live at **https://flarsu.github.io/EGuitar/** — no install, works offline after first load.
+
+To deploy an update: `npm run build && cp dist/index.html docs/index.html`, then commit and push (GitHub Pages serves `docs/`).
+
 ## Export to any system
 
 ```sh
