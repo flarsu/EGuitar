@@ -22,6 +22,7 @@ interface SavedSettings {
   mode: PlayMode
   keyRoot: number
   preset: TonePreset
+  theme: Theme
 }
 
 function loadSettings(): Partial<SavedSettings> {
@@ -39,6 +40,7 @@ const MAX_OCTAVE = 2
 // Window can slide from strings e-B-G-D (offset 0) down to G-D-A-E (offset 2).
 const MAX_WINDOW = STANDARD_TUNING.length - 4
 
+export type Theme = 'dark' | 'light'
 export type EngineId = 'synth' | 'acoustic'
 export type SamplerState = 'idle' | 'loading' | 'ready' | 'failed'
 
@@ -60,6 +62,7 @@ export default function App() {
   const [chordDegree, setChordDegree] = useState(0)
   const [chordVariant, setChordVariant] = useState<ChordVariant>('auto')
   const [preset, setPreset] = useState<TonePreset>(saved.preset ?? 'acoustic')
+  const [theme, setTheme] = useState<Theme>(saved.theme ?? 'dark')
   const [pluckedStrings, setPluckedStrings] = useState<Set<number>>(new Set())
 
   // Per-string stacks of physically held keys (press order), like fingers on a
@@ -69,6 +72,10 @@ export default function App() {
   const keyString = useRef(new Map<string, number>())
 
   const booted = useRef(false)
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+  }, [theme])
+
   useEffect(() => {
     setMasterVolume(volume)
     setTonePreset(preset)
@@ -82,9 +89,9 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem(
       SETTINGS_KEY,
-      JSON.stringify({ octave, windowOffset, volume, engineId, mode, keyRoot, preset }),
+      JSON.stringify({ octave, windowOffset, volume, engineId, mode, keyRoot, preset, theme }),
     )
-  }, [octave, windowOffset, volume, engineId, mode, keyRoot, preset])
+  }, [octave, windowOffset, volume, engineId, mode, keyRoot, preset, theme])
 
   const strumChord = (
     degree: number,
@@ -256,6 +263,7 @@ export default function App() {
         mode={mode}
         keyRoot={keyRoot}
         preset={preset}
+        theme={theme}
         onPreset={(p) => {
           setPreset(p)
           setTonePreset(p)
@@ -266,6 +274,7 @@ export default function App() {
           setMasterVolume(v)
         }}
         onToggleMode={toggleMode}
+        onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
         onOctave={shiftOctave}
         onWindow={shiftWindow}
         onKeyChange={changeKey}

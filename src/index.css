@@ -1,14 +1,74 @@
-:root {
-  --bg: #171310;
-  --panel: #201a14;
-  --panel-border: #302617;
-  --key-bg: #2a2219;
-  --key-border: #453723;
+:root,
+[data-theme='dark'] {
+  --bg: #0e0c0a;
+  --bg-subtle: #151210;
+  --panel: #1c1712;
+  --panel-alt: #221c15;
+  --panel-border: #3a2e1f;
+  --panel-shadow: rgba(0, 0, 0, 0.6);
+  --key-bg: #2c2318;
+  --key-bg-hover: #38301f;
+  --key-border: #4a3a25;
+  --key-shadow: rgba(0, 0, 0, 0.5);
+  --key-bottom: #1a1410;
   --accent: #e8a33d;
-  --accent-bright: #f3c26f;
+  --accent-bright: #f5c96a;
+  --accent-dim: #a06a15;
+  --accent-glow: rgba(232, 163, 61, 0.2);
+  --accent-glow-strong: rgba(232, 163, 61, 0.45);
   --text: #f0e6d8;
   --muted: #9a8a74;
+  --string-hi: #a08868;
+  --string-lo: #6a5840;
+  --string-ring-hi: #d4a040;
+  --string-ring-lo: #a08030;
+  --active-text: #1a1208;
+  --rec-color: #c04030;
+  --fret-marker: rgba(232, 163, 61, 0.5);
+  --fret-wood-hi: #2a2018;
+  --fret-wood-lo: #1a1410;
+  --fret-wire: rgba(200, 180, 140, 0.12);
+  --header-bg: #161210;
+  --header-border: var(--accent);
+  --nut-bg: #3a3028;
+  --nut-border: #5a4a35;
   color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --bg: #e8e0d0;
+  --bg-subtle: #f0e8d8;
+  --panel: #fffcf5;
+  --panel-alt: #f5eee0;
+  --panel-border: #c8b898;
+  --panel-shadow: rgba(100, 80, 50, 0.15);
+  --key-bg: #f5eee0;
+  --key-bg-hover: #ebe2d0;
+  --key-border: #c0b098;
+  --key-shadow: rgba(100, 80, 50, 0.2);
+  --key-bottom: #c8b898;
+  --accent: #b06800;
+  --accent-bright: #d48a10;
+  --accent-dim: #8a5200;
+  --accent-glow: rgba(176, 104, 0, 0.15);
+  --accent-glow-strong: rgba(176, 104, 0, 0.3);
+  --text: #2a2010;
+  --muted: #706048;
+  --string-hi: #b09878;
+  --string-lo: #907860;
+  --string-ring-hi: #b06800;
+  --string-ring-lo: #b09878;
+  --active-text: #fff8ee;
+  --rec-color: #c04030;
+  --fret-marker: rgba(176, 104, 0, 0.5);
+  --fret-wood-hi: #f0e8d8;
+  --fret-wood-lo: #e0d4c0;
+  --fret-wire: rgba(100, 80, 50, 0.1);
+  --header-bg: #f5efe5;
+  --header-border: var(--accent);
+  --nut-bg: #e0d4c0;
+  --nut-border: #c0b098;
+  color-scheme: light;
 }
 
 * {
@@ -21,6 +81,6 @@ body {
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
-  /* No double-tap zoom — this is an instrument, taps must fire instantly. */
   touch-action: manipulation;
+  min-height: 100vh;
 }

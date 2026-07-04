@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { NOTE_NAMES, STANDARD_TUNING } from '../music/theory'
 import { Recorder } from './Recorder'
+import { Playbook } from './Playbook'
 import type { TonePreset } from '../audio/context'
-import type { EngineId, SamplerState } from '../App'
+import type { EngineId, SamplerState, Theme } from '../App'
 import type { PlayMode } from '../input/keyboard'
 
 const PRESETS: { id: TonePreset; label: string }[] = [
@@ -19,10 +21,12 @@ interface Props {
   mode: PlayMode
   keyRoot: number
   preset: TonePreset
+  theme: Theme
   onPreset(preset: TonePreset): void
   onEngine(id: EngineId): void
   onVolume(value: number): void
   onToggleMode(): void
+  onToggleTheme(): void
   onOctave(delta: number): void
   onWindow(delta: number): void
   onKeyChange(delta: number): void
@@ -37,14 +41,17 @@ export function Controls({
   mode,
   keyRoot,
   preset,
+  theme,
   onPreset,
   onEngine,
   onVolume,
   onToggleMode,
+  onToggleTheme,
   onOctave,
   onWindow,
   onKeyChange,
 }: Props) {
+  const [playbookOpen, setPlaybookOpen] = useState(false)
   const strings = STANDARD_TUNING.slice(windowOffset, windowOffset + 4)
     .map((s) => s.name)
     .join(' ')
@@ -84,6 +91,9 @@ export function Controls({
           ))}
         </div>
         <Recorder />
+        <button className="playbook-btn" onClick={() => setPlaybookOpen(true)} title="How to play">
+          Playbook
+        </button>
         <button className="badge mode-badge" onClick={onToggleMode} title="Toggle lead / chord mode (⇥)">
           {mode === 'lead' ? 'Lead' : 'Chord'}
         </button>
@@ -129,7 +139,16 @@ export function Controls({
             onChange={(e) => onVolume(Number(e.target.value))}
           />
         </label>
+        <button
+          className="theme-toggle"
+          onClick={onToggleTheme}
+          title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+          aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+        >
+          {theme === 'dark' ? '☀' : '☽'}
+        </button>
       </div>
+      <Playbook open={playbookOpen} onClose={() => setPlaybookOpen(false)} />
     </header>
   )
 }

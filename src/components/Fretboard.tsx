@@ -2,6 +2,8 @@ import type { PointerEvent } from 'react'
 import { ROWS, KEY_LABELS } from '../input/keymap'
 import { STANDARD_TUNING, midiToName } from '../music/theory'
 
+const MARKER_FRETS = new Set([3, 5, 7, 9])
+
 interface Props {
   windowOffset: number
   octave: number
@@ -20,7 +22,17 @@ export function Fretboard({ windowOffset, octave, activeKeys, onPluck, onRelease
       <div className="fret-numbers">
         <span />
         {Array.from({ length: 10 }, (_, fret) => (
-          <span key={fret}>{fret === 0 ? 'open' : fret}</span>
+          <span key={fret} className={fret === 0 ? 'fret-nut' : MARKER_FRETS.has(fret) ? 'fret-marked' : ''}>
+            {fret === 0 ? 'open' : fret}
+          </span>
+        ))}
+      </div>
+      <div className="fret-markers">
+        <span />
+        {Array.from({ length: 10 }, (_, fret) => (
+          <span key={fret} className="fret-marker-cell">
+            {MARKER_FRETS.has(fret) && <span className="fret-dot" />}
+          </span>
         ))}
       </div>
       {ROWS.map((rowKeys, row) => {
@@ -32,7 +44,7 @@ export function Fretboard({ windowOffset, octave, activeKeys, onPluck, onRelease
             <span className="string-label">{string.name}</span>
             <div
               className="string-line"
-              style={{ height: `${1 + stringIndex * 0.4}px` }}
+              style={{ height: `${1.5 + stringIndex * 0.5}px` }}
             />
             {rowKeys.map((code, fret) => {
               const midi = string.midi + fret + 12 * octave
@@ -40,7 +52,11 @@ export function Fretboard({ windowOffset, octave, activeKeys, onPluck, onRelease
               return (
                 <button
                   key={code}
-                  className={'keycap' + (active ? ' active' : '')}
+                  className={
+                    'keycap' +
+                    (active ? ' active' : '') +
+                    (fret === 0 ? ' keycap-open' : '')
+                  }
                   onPointerDown={(e) => press(e, code)}
                   onPointerUp={() => onRelease(code)}
                   onPointerLeave={() => onRelease(code)}
