@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Controls } from './components/Controls'
 import { Fretboard } from './components/Fretboard'
 import { ChordPanel } from './components/ChordPanel'
 import { KeyboardHints } from './components/KeyboardHints'
+import { TabView } from './components/TabView'
+import { MicListener } from './components/MicListener'
+import { SongAnalyzer } from './components/SongAnalyzer'
 import { useGuitarKeyboard, type PlayMode } from './input/keyboard'
 import { KEY_TO_POSITION } from './input/keymap'
 import { STANDARD_TUNING, diatonicChord, type ChordVariant } from './music/theory'
@@ -10,6 +13,8 @@ import { KarplusStrongEngine } from './audio/karplus'
 import { SamplerEngine } from './audio/sampler'
 import { VoiceManager } from './audio/voices'
 import { setMasterVolume, setTonePreset, type TonePreset } from './audio/context'
+import { TabRecorder } from './tab/recorder'
+import type { TabSheet, TabEvent } from './tab/types'
 import './App.css'
 
 const SETTINGS_KEY = 'eguitar-settings'
@@ -49,6 +54,7 @@ const engines: Record<EngineId, KarplusStrongEngine | SamplerEngine> = {
   acoustic: new SamplerEngine(),
 }
 const voices = new VoiceManager()
+const tabRecorder = new TabRecorder()
 
 export default function App() {
   const [octave, setOctave] = useState(saved.octave ?? 0)
@@ -64,6 +70,15 @@ export default function App() {
   const [preset, setPreset] = useState<TonePreset>(saved.preset ?? 'acoustic')
   const [theme, setTheme] = useState<Theme>(saved.theme ?? 'dark')
   const [pluckedStrings, setPluckedStrings] = useState<Set<number>>(new Set())
+  const [tabRecording, setTabRecording] = useState(false)
+  const [tabSheet, setTabSheet] = useState<TabSheet | null>(null)
+  const [savedTabs, setSavedTabs] = useState<TabSheet[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('eguitar-tabs') ?? '[]') as TabSheet[]
+    } catch {
+      return []
+    }
+  })
 
   // Per-string stacks of physically held keys (press order), like fingers on a
   // fretboard: pressing onto a fingered string = hammer-on/slide, releasing the
@@ -93,6 +108,36 @@ export default function App() {
     )
   }, [octave, windowOffset, volume, engineId, mode, keyRoot, preset, theme])
 
+  const toggleTabRecording = useCallback(() => {
+    if (tabRecording) {
+      const sheet = tabRecorder.stop()
+      setTabRecording(false)
+      if (sheet.events.length > 0) {
+        setTabSheet(sheet)
+        const updated = [...savedTabs, sheet]
+        setSavedTabs(updated)
+        localStorage.setItem('eguitar-tabs', JSON.stringify(updated))
+      }
+    } else {
+      tabRecorder.start()
+      setTabRecording(true)
+      setTabSheet(null)
+    }
+  }, [tabRecording, savedTabs])
+
+  const handleMicTab = useCallback((sheet: TabSheet) => {
+    setTabSheet(sheet)
+    const updated = [...savedTabs, sheet]
+    setSavedTabs(updated)
+    localStorage.setItem('eguitar-tabs', JSON.stringify(updated))
+  }, [savedTabs])
+
+  const handleTabReplay = useCallback((event: TabEvent) => {
+    if (event.type === 'pluck') {
+      voices.pluck(engines[engineId], `replay-${event.stringIndex}`, event.stringIndex, event.midi, 0.9, event.muted)
+    }
+  }, [engineId])
+
   const strumChord = (
     degree: number,
     direction: 'down' | 'up',
@@ -104,18 +149,20 @@ export default function App() {
     // A chuck is a tighter, faster sweep than an open strum.
     const step = muted ? 10 : 18
     chord.midis.forEach((midi, i) => {
-      // Down-strums hit the low strings first, like a real pick sweep.
       const delay = direction === 'down' ? i * step : (count - 1 - i) * step
       const stringIndex = count - 1 - i
+      const finalMidi = midi + 12 * octave
       window.setTimeout(() => {
         voices.pluck(
           engines[engineId],
           `chord-${stringIndex}`,
           stringIndex,
-          midi + 12 * octave,
+          finalMidi,
           0.75 + Math.random() * 0.25,
           muted,
         )
+        const fret = Math.max(0, finalMidi - STANDARD_TUNING[stringIndex].midi)
+        tabRecorder.recordPluck(stringIndex, fret, finalMidi, muted)
       }, delay)
     })
   }
@@ -187,11 +234,11 @@ export default function App() {
     const midi = STANDARD_TUNING[stringIndex].midi + pos.fret + 12 * octave
     const stack = heldStrings.current.get(stringIndex) ?? []
     if (stack.length > 0) {
-      // String is already fingered: hammer-on (or slide with ⇧), no new attack.
       voices.legato(stringIndex, code, midi, slide ? 0.12 : 0.012)
     } else {
       voices.pluck(engines[engineId], code, stringIndex, midi, 1, muted)
     }
+    tabRecorder.recordPluck(stringIndex, pos.fret, midi, muted)
     stack.push({ code, midi })
     heldStrings.current.set(stringIndex, stack)
     keyString.current.set(code, stringIndex)
@@ -298,6 +345,36 @@ export default function App() {
           onSelectVariant={selectVariant}
           onPluckString={pluckString}
           onStrum={strum}
+        />
+      )}
+      <div className="tab-mic-bar">
+        <button
+          className={`tab-rec-btn${tabRecording ? ' recording' : ''}`}
+          onClick={toggleTabRecording}
+          title={tabRecording ? 'Stop tab recording' : 'Record tablature'}
+        >
+          {tabRecording ? '■ Stop Tab' : '♫ Record Tab'}
+        </button>
+        <div className="tab-mic-divider" />
+        <MicListener onTabGenerated={handleMicTab} />
+        <SongAnalyzer />
+        <div className="tab-mic-divider" />
+        {savedTabs.length > 0 && !tabSheet && (
+          <button
+            className="tab-history-btn"
+            onClick={() => setTabSheet(savedTabs[savedTabs.length - 1])}
+            title="Show last recorded tab"
+          >
+            ↻ Last Tab ({savedTabs.length})
+          </button>
+        )}
+      </div>
+      {tabSheet && (
+        <TabView
+          sheet={tabSheet}
+          onReplay={handleTabReplay}
+          onClose={() => setTabSheet(null)}
+          onDone={() => {}}
         />
       )}
       <KeyboardHints mode={mode} />

@@ -975,3 +975,977 @@ kbd {
     padding: 8px 10px;
   }
 }
+
+/* ═══════════════════════════════════════════════════
+   TAB RECORDING / MIC BAR
+   ═══════════════════════════════════════════════════ */
+.tab-mic-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 12px 18px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  flex-wrap: wrap;
+}
+
+.tab-rec-btn {
+  font: inherit;
+  font-size: 12px;
+  padding: 7px 16px;
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 120ms;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.tab-rec-btn:hover {
+  background: var(--accent);
+  color: var(--active-text);
+  box-shadow: 0 0 14px var(--accent-glow-strong);
+}
+
+.tab-rec-btn.recording {
+  border-color: var(--rec-color);
+  background: var(--rec-color);
+  color: #fff;
+  animation: rec-pulse 1s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(200, 64, 32, 0.5);
+}
+
+.tab-history-btn {
+  font: inherit;
+  font-size: 12px;
+  padding: 7px 14px;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 100ms;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.tab-history-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════════
+   TAB VIEW PANEL
+   ═══════════════════════════════════════════════════ */
+.tab-panel {
+  margin-top: 18px;
+  background:
+    linear-gradient(
+      160deg,
+      var(--fret-wood-hi) 0%,
+      var(--fret-wood-lo) 40%,
+      var(--fret-wood-hi) 60%,
+      var(--fret-wood-lo) 100%
+    );
+  border: 2px solid var(--panel-border);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow:
+    0 10px 40px var(--panel-shadow),
+    inset 0 2px 20px rgba(0, 0, 0, 0.2);
+}
+
+.tab-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 2px solid var(--panel-border);
+  background: var(--panel);
+  gap: 12px;
+}
+
+.tab-title h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--accent);
+  font-family: 'Georgia', serif;
+}
+
+.tab-meta {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.tab-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.tab-play-btn {
+  font: inherit;
+  font-size: 12px;
+  padding: 6px 16px;
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 120ms;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.tab-play-btn:hover {
+  background: var(--accent);
+  color: var(--active-text);
+  box-shadow: 0 0 14px var(--accent-glow-strong);
+}
+
+.tab-close-btn {
+  font: inherit;
+  font-size: 14px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--key-border);
+  background: var(--key-bg);
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 100ms;
+}
+
+.tab-close-btn:hover {
+  background: var(--accent);
+  color: var(--active-text);
+  border-color: var(--accent);
+}
+
+/* ─── Tablature grid ─── */
+.tab-grid-scroll {
+  overflow-x: auto;
+  padding: 16px 12px 20px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--key-border) transparent;
+}
+
+.tab-grid {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0;
+  min-width: 100%;
+}
+
+.tab-string-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex-shrink: 0;
+  margin-right: 4px;
+}
+
+.tab-string-label {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  width: 28px;
+}
+
+.tab-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 32px;
+  border-left: 1px solid var(--panel-border);
+  transition: background 150ms;
+}
+
+.tab-column.active {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+}
+
+.tab-cell {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--panel-border);
+  position: relative;
+}
+
+.tab-cell::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--panel-border);
+  z-index: 0;
+}
+
+.tab-fret {
+  position: relative;
+  z-index: 1;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--key-bg);
+  border: 1px solid var(--key-border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  min-width: 22px;
+  text-align: center;
+}
+
+.tab-cell.muted .tab-fret {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.tab-column.active .tab-cell.has-note .tab-fret {
+  background: var(--accent);
+  color: var(--active-text);
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 10px var(--accent-glow-strong);
+}
+
+.tab-dash {
+  position: relative;
+  z-index: 1;
+  font-size: 11px;
+  color: var(--panel-border);
+  font-weight: 300;
+}
+
+.tab-empty {
+  padding: 40px 20px;
+  color: var(--muted);
+  font-size: 14px;
+  font-style: italic;
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════════════════
+   MICROPHONE LISTENER
+   ═══════════════════════════════════════════════════ */
+.mic-panel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mic-btn {
+  font: inherit;
+  font-size: 12px;
+  padding: 7px 16px;
+  border: 2px solid var(--accent-dim);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 120ms;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.mic-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.mic-btn.listening {
+  border-color: #4ade80;
+  background: #4ade80;
+  color: #000;
+  animation: mic-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(74, 222, 128, 0); }
+}
+
+.mic-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mic-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: mic-dot 1s ease-in-out infinite;
+}
+
+@keyframes mic-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.mic-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.mic-elapsed {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.mic-note-count {
+  color: var(--muted);
+}
+
+.mic-current-note {
+  font-weight: 800;
+  color: var(--accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 14px;
+  background: var(--key-bg);
+  border: 1px solid var(--key-border);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.mic-current-chord {
+  font-weight: 800;
+  color: var(--active-text);
+  background: var(--accent);
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .tab-mic-bar {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  .tab-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 14px;
+  }
+  .tab-grid-scroll {
+    padding: 10px 8px 14px;
+  }
+  .tab-string-label {
+    font-size: 11px;
+    width: 22px;
+    height: 24px;
+  }
+  .tab-column {
+    min-width: 26px;
+  }
+  .tab-cell {
+    height: 24px;
+  }
+  .tab-fret {
+    font-size: 12px;
+    padding: 0 3px;
+    min-width: 18px;
+  }
+  .mic-info {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   TAB-MIC BAR EXTRAS
+   ═══════════════════════════════════════════════════ */
+.tab-mic-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--panel-border);
+  flex-shrink: 0;
+}
+
+.mic-detected-key {
+  font-weight: 700;
+  color: var(--text);
+  background: var(--key-bg);
+  border: 1px solid var(--accent-dim);
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: 12px;
+}
+
+/* ═══════════════════════════════════════════════════
+   SONG ANALYZER
+   ═══════════════════════════════════════════════════ */
+.song-analyzer {
+  display: contents;
+}
+
+.song-btn {
+  font: inherit;
+  font-size: 12px;
+  padding: 7px 16px;
+  border: 2px solid #a78bfa;
+  border-radius: 999px;
+  background: transparent;
+  color: #a78bfa;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 120ms;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  white-space: nowrap;
+}
+
+.song-btn:hover {
+  background: #a78bfa;
+  color: #000;
+  box-shadow: 0 0 14px rgba(167, 139, 250, 0.4);
+}
+
+.song-btn.analyzing {
+  border-color: #a78bfa;
+  background: #a78bfa;
+  color: #000;
+  animation: song-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes song-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(167, 139, 250, 0); }
+}
+
+/* ─── Live analysis display ─── */
+.song-live {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.song-live-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #a78bfa;
+  animation: mic-dot 1s ease-in-out infinite;
+}
+
+.song-live-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  flex-wrap: wrap;
+}
+
+.song-live-time {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.song-live-bpm {
+  font-weight: 900;
+  color: #000;
+  background: #a78bfa;
+  border-radius: 6px;
+  padding: 2px 12px;
+  font-size: 16px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.song-live-bpm small {
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.song-live-lead {
+  font-weight: 800;
+  color: var(--accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  background: var(--key-bg);
+  border: 1px solid var(--key-border);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.song-live-key {
+  font-weight: 700;
+  color: var(--text);
+  background: var(--key-bg);
+  border: 1px solid #a78bfa;
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: 12px;
+}
+
+.song-live-counts {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* ─── Results panel ─── */
+.song-results {
+  margin-top: 18px;
+  background:
+    linear-gradient(
+      160deg,
+      var(--fret-wood-hi) 0%,
+      var(--fret-wood-lo) 40%,
+      var(--fret-wood-hi) 60%,
+      var(--fret-wood-lo) 100%
+    );
+  border: 2px solid var(--panel-border);
+  border-top: 4px solid #a78bfa;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow:
+    0 10px 40px var(--panel-shadow),
+    inset 0 2px 20px rgba(0, 0, 0, 0.2);
+}
+
+.song-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 2px solid var(--panel-border);
+  background: var(--panel);
+}
+
+.song-results-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+  color: #a78bfa;
+  font-family: 'Georgia', serif;
+}
+
+.song-results-close {
+  font: inherit;
+  font-size: 14px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--key-border);
+  background: var(--key-bg);
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 100ms;
+}
+
+.song-results-close:hover {
+  background: #a78bfa;
+  color: #000;
+  border-color: #a78bfa;
+}
+
+.song-results-body {
+  padding: 20px;
+}
+
+/* ─── Stats row ─── */
+.song-stat-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.song-stat {
+  flex: 1;
+  min-width: 100px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.song-stat-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.song-stat-value {
+  display: block;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--text);
+  font-family: 'Georgia', serif;
+}
+
+.song-stat-key {
+  color: #a78bfa;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+}
+
+.song-stat-key small {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.song-stat-bpm {
+  color: #a78bfa;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+}
+
+.song-stat-bpm small {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ─── Sections ─── */
+.song-section {
+  margin-bottom: 20px;
+}
+
+.song-section:last-child {
+  margin-bottom: 0;
+}
+
+.song-section h4 {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--accent);
+  margin: 0 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--panel-border);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+/* ─── Section badge ─── */
+.song-section-badge {
+  float: right;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ─── Beat timeline ─── */
+.song-beat-timeline {
+  margin-bottom: 14px;
+}
+
+.song-beat-track {
+  position: relative;
+  height: 32px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.song-beat-tick {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: #a78bfa;
+  border-radius: 1px;
+  opacity: 0.8;
+  transition: opacity 100ms;
+}
+
+.song-beat-tick:hover {
+  opacity: 1;
+  width: 3px;
+  background: #c4b5fd;
+  box-shadow: 0 0 6px rgba(167, 139, 250, 0.6);
+}
+
+.song-beat-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ─── Beat intervals chart ─── */
+.beat-intervals-chart {
+  margin-top: 12px;
+}
+
+.beat-intervals-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.beat-intervals-stats {
+  font-weight: 500;
+  font-size: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.beat-intervals-bars {
+  display: flex;
+  gap: 2px;
+  height: 40px;
+  align-items: flex-end;
+  padding: 4px 0;
+}
+
+.beat-interval-bar {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.beat-interval-fill {
+  width: 100%;
+  background: #a78bfa;
+  border-radius: 2px 2px 0 0;
+  opacity: 0.7;
+  min-height: 2px;
+  transition: height 200ms;
+}
+
+.beat-interval-bar:hover .beat-interval-fill {
+  opacity: 1;
+  background: #c4b5fd;
+}
+
+/* ─── Chord family (circle of fifths) ─── */
+.song-chord-family {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.song-family-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 12px 4px 8px;
+  background: var(--key-bg);
+  border: 1px solid var(--key-border);
+  border-bottom: 3px solid var(--key-bottom);
+  border-radius: 10px;
+  transition: all 100ms;
+}
+
+.song-family-card.major {
+  border-top: 3px solid #a78bfa;
+}
+
+.song-family-card.minor {
+  border-top: 3px solid var(--accent);
+}
+
+.song-family-card.diminished {
+  border-top: 3px solid var(--muted);
+}
+
+.song-family-degree {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  font-family: 'Georgia', serif;
+  font-style: italic;
+}
+
+.song-family-name {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--text);
+  font-family: 'Georgia', serif;
+}
+
+.song-family-card.major .song-family-name {
+  color: #a78bfa;
+}
+
+.song-family-quality {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ─── Time signature stat ─── */
+.song-stat-time-sig {
+  color: #a78bfa;
+  font-family: 'Georgia', serif;
+}
+
+/* ─── Measure details ─── */
+.song-measure-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.song-measure-detail {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.song-measure-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.song-measure-val {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ─── Bar lines on beat map ─── */
+.song-bar-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent);
+  opacity: 0.4;
+  z-index: 0;
+}
+
+/* ─── Chromagram visualization ─── */
+.song-chroma {
+  display: flex;
+  gap: 4px;
+  height: 80px;
+  align-items: flex-end;
+  padding: 8px 0;
+}
+
+.song-chroma-bar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  position: relative;
+}
+
+.song-chroma-fill {
+  width: 100%;
+  background: var(--accent);
+  border-radius: 4px 4px 0 0;
+  transition: height 300ms;
+  min-height: 2px;
+  opacity: 0.6;
+}
+
+.song-chroma-bar.root .song-chroma-fill {
+  background: #a78bfa;
+  opacity: 1;
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.4);
+}
+
+.song-chroma-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-top: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.song-chroma-bar.root .song-chroma-label {
+  color: #a78bfa;
+  font-weight: 900;
+}
+
+@media (max-width: 640px) {
+  .song-stat-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .song-stat {
+    min-width: auto;
+  }
+  .song-results-body {
+    padding: 14px;
+  }
+  .song-chord-family {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .song-family-name {
+    font-size: 14px;
+  }
+  .song-family-card {
+    padding: 8px 2px 6px;
+  }
+  .song-measure-info {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .song-live-info {
+    gap: 6px;
+  }
+}
