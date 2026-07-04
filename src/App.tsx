@@ -132,95 +132,116 @@ export default function App() {
     setEngineId(id)
   }
 
+  // Shared by the physical keyboard and on-screen touch controls.
+  const toggleMode = () => {
+    voices.releaseAll()
+    heldStrings.current.clear()
+    keyString.current.clear()
+    setActiveKeys(new Set())
+    setMode((m) => (m === 'lead' ? 'chord' : 'lead'))
+  }
+
+  const selectChord = (degree: number) => {
+    setChordDegree(degree)
+    strumChord(degree, 'down')
+  }
+
+  const strum = (direction: 'down' | 'up', muted = false) => {
+    strumChord(chordDegree, direction, muted)
+  }
+
+  const changeKey = (delta: number) => {
+    setKeyRoot((k) => (k + delta + 12) % 12)
+  }
+
+  const selectVariant = (variant: ChordVariant) => {
+    setChordVariant(variant)
+  }
+
+  const pluckString = (stringIndex: number, muted = false) => {
+    const chord = diatonicChord(keyRoot, chordDegree, chordVariant)
+    // chord.midis is ascending, so the lowest note sits on string index 5.
+    const midi = chord.midis[5 - stringIndex] + 12 * octave
+    voices.pluck(engines[engineId], `chord-${stringIndex}`, stringIndex, midi, 0.9, muted)
+    setPluckedStrings((prev) => new Set(prev).add(stringIndex))
+    window.setTimeout(() => {
+      setPluckedStrings((prev) => {
+        const next = new Set(prev)
+        next.delete(stringIndex)
+        return next
+      })
+    }, 160)
+  }
+
+  const pluck = (code: string, muted = false, slide = false) => {
+    const pos = KEY_TO_POSITION[code]
+    if (!pos) return
+    const stringIndex = windowOffset + pos.row
+    const midi = STANDARD_TUNING[stringIndex].midi + pos.fret + 12 * octave
+    const stack = heldStrings.current.get(stringIndex) ?? []
+    if (stack.length > 0) {
+      // String is already fingered: hammer-on (or slide with ⇧), no new attack.
+      voices.legato(stringIndex, code, midi, slide ? 0.12 : 0.012)
+    } else {
+      voices.pluck(engines[engineId], code, stringIndex, midi, 1, muted)
+    }
+    stack.push({ code, midi })
+    heldStrings.current.set(stringIndex, stack)
+    keyString.current.set(code, stringIndex)
+    setActiveKeys((prev) => new Set(prev).add(code))
+  }
+
+  const release = (code: string) => {
+    const stringIndex = keyString.current.get(code)
+    keyString.current.delete(code)
+    if (stringIndex !== undefined) {
+      const stack = heldStrings.current.get(stringIndex) ?? []
+      const idx = stack.findIndex((entry) => entry.code === code)
+      const wasSounding = idx === stack.length - 1
+      if (idx >= 0) stack.splice(idx, 1)
+      if (stack.length === 0) {
+        heldStrings.current.delete(stringIndex)
+        voices.release(code)
+      } else if (wasSounding) {
+        // Pull-off: fall back to the finger still holding the string.
+        const target = stack[stack.length - 1]
+        voices.legato(stringIndex, target.code, target.midi, 0.012)
+      }
+    } else {
+      voices.release(code)
+    }
+    setActiveKeys((prev) => {
+      const next = new Set(prev)
+      next.delete(code)
+      return next
+    })
+  }
+
+  const shiftOctave = (delta: number) => {
+    setOctave((o) => Math.max(MIN_OCTAVE, Math.min(MAX_OCTAVE, o + delta)))
+  }
+
+  const shiftWindow = (delta: number) => {
+    setWindowOffset((w) => Math.max(0, Math.min(MAX_WINDOW, w + delta)))
+  }
+
   useGuitarKeyboard({
     mode,
-    toggleMode() {
-      voices.releaseAll()
-      heldStrings.current.clear()
-      keyString.current.clear()
-      setActiveKeys(new Set())
-      setMode((m) => (m === 'lead' ? 'chord' : 'lead'))
-    },
-    selectChord(degree) {
-      setChordDegree(degree)
-      strumChord(degree, 'down')
-    },
-    strum(direction, muted) {
-      strumChord(chordDegree, direction, muted)
-    },
-    changeKey(delta) {
-      setKeyRoot((k) => (k + delta + 12) % 12)
-    },
-    selectVariant(variant) {
-      setChordVariant(variant)
-    },
-    pluckString(stringIndex, muted) {
-      const chord = diatonicChord(keyRoot, chordDegree, chordVariant)
-      // chord.midis is ascending, so the lowest note sits on string index 5.
-      const midi = chord.midis[5 - stringIndex] + 12 * octave
-      voices.pluck(engines[engineId], `chord-${stringIndex}`, stringIndex, midi, 0.9, muted)
-      setPluckedStrings((prev) => new Set(prev).add(stringIndex))
-      window.setTimeout(() => {
-        setPluckedStrings((prev) => {
-          const next = new Set(prev)
-          next.delete(stringIndex)
-          return next
-        })
-      }, 160)
-    },
+    toggleMode,
+    selectChord,
+    strum,
+    changeKey,
+    selectVariant,
+    pluckString,
+    pluck,
+    release,
+    shiftOctave,
+    shiftWindow,
     bend(on) {
       voices.setBend(on ? 2 : 0)
     },
     vibrato(on) {
       voices.setVibrato(on)
-    },
-    pluck(code, muted, slide) {
-      const pos = KEY_TO_POSITION[code]
-      if (!pos) return
-      const stringIndex = windowOffset + pos.row
-      const midi = STANDARD_TUNING[stringIndex].midi + pos.fret + 12 * octave
-      const stack = heldStrings.current.get(stringIndex) ?? []
-      if (stack.length > 0) {
-        // String is already fingered: hammer-on (or slide with ⇧), no new attack.
-        voices.legato(stringIndex, code, midi, slide ? 0.12 : 0.012)
-      } else {
-        voices.pluck(engines[engineId], code, stringIndex, midi, 1, muted)
-      }
-      stack.push({ code, midi })
-      heldStrings.current.set(stringIndex, stack)
-      keyString.current.set(code, stringIndex)
-      setActiveKeys((prev) => new Set(prev).add(code))
-    },
-    release(code) {
-      const stringIndex = keyString.current.get(code)
-      keyString.current.delete(code)
-      if (stringIndex !== undefined) {
-        const stack = heldStrings.current.get(stringIndex) ?? []
-        const idx = stack.findIndex((entry) => entry.code === code)
-        const wasSounding = idx === stack.length - 1
-        if (idx >= 0) stack.splice(idx, 1)
-        if (stack.length === 0) {
-          heldStrings.current.delete(stringIndex)
-          voices.release(code)
-        } else if (wasSounding) {
-          // Pull-off: fall back to the finger still holding the string.
-          const target = stack[stack.length - 1]
-          voices.legato(stringIndex, target.code, target.midi, 0.012)
-        }
-      } else {
-        voices.release(code)
-      }
-      setActiveKeys((prev) => {
-        const next = new Set(prev)
-        next.delete(code)
-        return next
-      })
-    },
-    shiftOctave(delta) {
-      setOctave((o) => Math.max(MIN_OCTAVE, Math.min(MAX_OCTAVE, o + delta)))
-    },
-    shiftWindow(delta) {
-      setWindowOffset((w) => Math.max(0, Math.min(MAX_WINDOW, w + delta)))
     },
   })
 
@@ -244,9 +265,19 @@ export default function App() {
           setVolume(v)
           setMasterVolume(v)
         }}
+        onToggleMode={toggleMode}
+        onOctave={shiftOctave}
+        onWindow={shiftWindow}
+        onKeyChange={changeKey}
       />
       {mode === 'lead' ? (
-        <Fretboard windowOffset={windowOffset} octave={octave} activeKeys={activeKeys} />
+        <Fretboard
+          windowOffset={windowOffset}
+          octave={octave}
+          activeKeys={activeKeys}
+          onPluck={pluck}
+          onRelease={release}
+        />
       ) : (
         <ChordPanel
           keyRoot={keyRoot}
@@ -254,6 +285,10 @@ export default function App() {
           chordVariant={chordVariant}
           pluckedStrings={pluckedStrings}
           octave={octave}
+          onSelectChord={selectChord}
+          onSelectVariant={selectVariant}
+          onPluckString={pluckString}
+          onStrum={strum}
         />
       )}
       <KeyboardHints mode={mode} />

@@ -90,6 +90,39 @@
   font-variant-numeric: tabular-nums;
 }
 
+button.badge {
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 6px;
+}
+
+.stepper button {
+  font: inherit;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--key-border);
+  background: var(--key-bg);
+  color: var(--text);
+  cursor: pointer;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepper button:active {
+  background: var(--accent);
+  color: #241a0c;
+}
+
 .volume {
   display: flex;
   align-items: center;
@@ -161,6 +194,25 @@
   0%   { transform: translateY(calc(-50% - 1px)); }
   50%  { transform: translateY(calc(-50% + 1px)); }
   100% { transform: translateY(calc(-50% - 1px)); }
+}
+
+.keycap,
+.chord-card,
+.pluck-key,
+.variant-key,
+.strum-btn {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.keycap,
+.pluck-key,
+.strum-btn {
+  touch-action: none;
 }
 
 .keycap {
@@ -320,10 +372,74 @@
   color: #241a0c;
 }
 
+.strum-btn {
+  padding: 9px 18px;
+  background: var(--key-bg);
+  border: 1px solid var(--key-border);
+  border-radius: 8px;
+  font-size: 14px;
+  transition: background 60ms;
+}
+
+.strum-btn:active {
+  background: var(--accent);
+  color: #241a0c;
+}
+
 .chord-help {
   margin: 16px 2px 0;
   font-size: 13px;
   color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  .app {
+    padding: 16px 8px 24px;
+  }
+  .fret-numbers,
+  .string-row {
+    grid-template-columns: 24px repeat(10, 1fr);
+    gap: 3px;
+  }
+  .fretboard,
+  .chord-panel {
+    padding: 10px 8px;
+  }
+  .keycap {
+    padding: 7px 0 6px;
+    border-radius: 6px;
+  }
+  .key-label {
+    font-size: 12px;
+  }
+  .note-label {
+    font-size: 10px;
+  }
+  .string-line {
+    left: 28px;
+  }
+  .chord-grid {
+    gap: 5px;
+  }
+  .chord-name {
+    font-size: 15px;
+  }
+  .pluck-row {
+    gap: 4px;
+  }
+  .pluck-label {
+    width: 30px;
+    font-size: 11px;
+  }
+  .pluck-key,
+  .variant-key {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+  }
+  .strum-btn {
+    flex: 1;
+  }
 }
 
 .hints {

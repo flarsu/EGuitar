@@ -22,6 +22,10 @@ interface Props {
   onPreset(preset: TonePreset): void
   onEngine(id: EngineId): void
   onVolume(value: number): void
+  onToggleMode(): void
+  onOctave(delta: number): void
+  onWindow(delta: number): void
+  onKeyChange(delta: number): void
 }
 
 export function Controls({
@@ -36,12 +40,16 @@ export function Controls({
   onPreset,
   onEngine,
   onVolume,
+  onToggleMode,
+  onOctave,
+  onWindow,
+  onKeyChange,
 }: Props) {
-  const acousticLabel =
-    samplerState === 'loading' ? 'Acoustic…' : samplerState === 'failed' ? 'Acoustic ✕' : 'Acoustic'
   const strings = STANDARD_TUNING.slice(windowOffset, windowOffset + 4)
     .map((s) => s.name)
     .join(' ')
+  const acousticLabel =
+    samplerState === 'loading' ? 'Acoustic…' : samplerState === 'failed' ? 'Acoustic ✕' : 'Acoustic'
 
   return (
     <header className="controls">
@@ -76,15 +84,39 @@ export function Controls({
           ))}
         </div>
         <Recorder />
-        <span className="badge mode-badge">{mode === 'lead' ? 'Lead' : 'Chord'}</span>
-        <span className="badge">
+        <button className="badge mode-badge" onClick={onToggleMode} title="Toggle lead / chord mode (⇥)">
+          {mode === 'lead' ? 'Lead' : 'Chord'}
+        </button>
+        <span className="badge stepper">
+          <button onClick={() => onOctave(-1)} aria-label="Octave down">
+            −
+          </button>
           Octave {octave >= 0 ? '+' : ''}
           {octave}
+          <button onClick={() => onOctave(1)} aria-label="Octave up">
+            +
+          </button>
         </span>
         {mode === 'lead' ? (
-          <span className="badge">Strings {strings}</span>
+          <span className="badge stepper">
+            <button onClick={() => onWindow(1)} aria-label="Lower strings" title="Toward low E ([)">
+              ‹
+            </button>
+            Strings {strings}
+            <button onClick={() => onWindow(-1)} aria-label="Higher strings" title="Toward high e (])">
+              ›
+            </button>
+          </span>
         ) : (
-          <span className="badge">Key of {NOTE_NAMES[keyRoot]}</span>
+          <span className="badge stepper">
+            <button onClick={() => onKeyChange(-1)} aria-label="Key down">
+              ‹
+            </button>
+            Key of {NOTE_NAMES[keyRoot]}
+            <button onClick={() => onKeyChange(1)} aria-label="Key up">
+              ›
+            </button>
+          </span>
         )}
         <label className="volume">
           Vol
