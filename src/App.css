@@ -8,7 +8,7 @@
 }
 
 /* ═══════════════════════════════════════════════════
-   HEADER — sticky bar with bright accent underline
+   HEADER
    ═══════════════════════════════════════════════════ */
 .controls {
   display: flex;
@@ -16,7 +16,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 10px;
-  padding: 16px 24px 14px;
+  padding: 18px 24px 16px;
   margin: 0 -20px 28px;
   background: var(--header-bg);
   border-bottom: 3px solid var(--header-border);
@@ -26,20 +26,23 @@
 }
 
 .controls h1 {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 900;
   margin: 0;
   color: var(--accent);
+  font-family: 'Georgia', serif;
   letter-spacing: -0.5px;
+  text-shadow: 0 2px 12px var(--accent-glow-strong);
 }
 
 .tagline {
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--muted);
-  margin-left: 10px;
-  letter-spacing: 1px;
+  margin-left: 12px;
+  letter-spacing: 2px;
   text-transform: uppercase;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .badges {
@@ -70,16 +73,19 @@
   cursor: pointer;
   transition: all 100ms;
   font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .engine-switch button:hover:not(.on) {
   color: var(--text);
+  background: var(--accent-glow);
 }
 
 .engine-switch button.on {
   background: var(--accent);
   color: var(--active-text);
   font-weight: 700;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -91,8 +97,8 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 2px solid var(--accent);
-  background: transparent;
+  border: 2px solid var(--accent-dim);
+  background: var(--panel);
   color: var(--accent);
   cursor: pointer;
   display: flex;
@@ -105,6 +111,8 @@
 .theme-toggle:hover {
   background: var(--accent);
   color: var(--active-text);
+  border-color: var(--accent);
+  box-shadow: 0 0 14px var(--accent-glow-strong);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -121,6 +129,7 @@
   cursor: pointer;
   font-weight: 500;
   transition: all 100ms;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .record-btn:hover {
@@ -132,12 +141,12 @@
   border-color: var(--rec-color);
   background: var(--rec-color);
   color: #fff;
-  animation: rec-pulse 1.2s ease-in-out infinite;
-  box-shadow: 0 0 20px rgba(192, 64, 48, 0.5);
+  animation: rec-pulse 1s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(200, 64, 32, 0.5);
 }
 
 @keyframes rec-pulse {
-  50% { opacity: 0.65; }
+  50% { opacity: 0.6; }
 }
 
 /* ═══════════════════════════════════════════════════
@@ -152,6 +161,7 @@
   color: var(--text);
   font-variant-numeric: tabular-nums;
   font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 button.badge {
@@ -159,6 +169,7 @@ button.badge {
   font-size: 12px;
   cursor: pointer;
   transition: all 100ms;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 button.badge:hover {
@@ -169,7 +180,7 @@ button.badge:hover {
 .mode-badge {
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   border-color: var(--accent-dim);
   color: var(--accent);
 }
@@ -218,6 +229,7 @@ button.badge:hover {
   font-size: 12px;
   color: var(--muted);
   font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .volume input {
@@ -227,16 +239,23 @@ button.badge:hover {
 }
 
 /* ═══════════════════════════════════════════════════
-   FRETBOARD — the main visual panel
+   FRETBOARD — rosewood panel
    ═══════════════════════════════════════════════════ */
 .fretboard {
-  background: linear-gradient(135deg, var(--fret-wood-hi) 0%, var(--fret-wood-lo) 100%);
+  background:
+    linear-gradient(
+      160deg,
+      var(--fret-wood-hi) 0%,
+      var(--fret-wood-lo) 40%,
+      var(--fret-wood-hi) 60%,
+      var(--fret-wood-lo) 100%
+    );
   border: 2px solid var(--panel-border);
   border-radius: 18px;
   padding: 20px 18px 18px;
   box-shadow:
-    0 8px 32px var(--panel-shadow),
-    inset 0 0 40px rgba(0, 0, 0, 0.15);
+    0 10px 40px var(--panel-shadow),
+    inset 0 2px 20px rgba(0, 0, 0, 0.2);
   position: relative;
 }
 
@@ -244,13 +263,13 @@ button.badge:hover {
 .string-row,
 .fret-markers {
   display: grid;
-  grid-template-columns: 40px repeat(10, 1fr);
-  gap: 6px;
+  grid-template-columns: 42px repeat(10, 1fr);
+  gap: 5px;
   align-items: center;
 }
 
 .fret-numbers {
-  margin-bottom: 2px;
+  margin-bottom: 0;
   position: relative;
   z-index: 1;
 }
@@ -259,24 +278,25 @@ button.badge:hover {
   text-align: center;
   font-size: 10px;
   color: var(--muted);
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .fret-numbers .fret-nut {
   color: var(--accent);
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .fret-numbers .fret-marked {
   color: var(--accent);
 }
 
-/* Fret marker dots — row between header and strings */
+/* ─── Fret marker inlay dots ─── */
 .fret-markers {
-  margin-bottom: 4px;
-  height: 14px;
+  margin-bottom: 2px;
+  height: 16px;
 }
 
 .fret-marker-cell {
@@ -286,48 +306,75 @@ button.badge:hover {
 }
 
 .fret-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: var(--fret-marker);
-  box-shadow: 0 0 6px var(--accent-glow-strong);
+  background: radial-gradient(
+    circle at 35% 35%,
+    #fff8e8 0%,
+    #e8d8b8 40%,
+    #c8b898 100%
+  );
+  box-shadow:
+    0 0 8px var(--fret-marker-glow),
+    inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(200, 180, 140, 0.3);
 }
 
 /* ─── String rows ─── */
 .string-row {
   position: relative;
-  padding: 6px 0;
+  padding: 7px 0;
   z-index: 1;
 }
 
 .string-label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
   color: var(--active-text);
   text-align: center;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   background: var(--accent);
   border-radius: 6px;
-  padding: 2px 0;
-  line-height: 1.4;
+  padding: 3px 0;
+  line-height: 1.3;
+  box-shadow: 0 2px 4px var(--accent-glow);
 }
 
 .string-line {
   position: absolute;
-  left: 48px;
+  left: 50px;
   right: 4px;
   top: 50%;
   transform: translateY(-50%);
-  background: linear-gradient(180deg, var(--string-hi), var(--string-lo));
   border-radius: 2px;
   z-index: 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.string-row:nth-child(3) .string-line,
+.string-row:nth-child(4) .string-line {
+  background: linear-gradient(180deg, var(--string-treble), var(--string-treble));
+}
+
+.string-row:nth-child(5) .string-line,
+.string-row:nth-child(6) .string-line {
+  background: linear-gradient(180deg, var(--string-bass), var(--string-bass));
 }
 
 .ringing .string-line {
-  background: linear-gradient(180deg, var(--string-ring-hi), var(--string-ring-lo));
-  animation: vibrate 0.09s linear infinite;
+  animation: vibrate 0.08s linear infinite;
+}
+
+.ringing.string-row:nth-child(3) .string-line,
+.ringing.string-row:nth-child(4) .string-line {
+  background: linear-gradient(180deg, var(--string-ring-treble), var(--string-ring-treble));
   box-shadow: 0 0 10px var(--accent-glow-strong);
+}
+
+.ringing.string-row:nth-child(5) .string-line,
+.ringing.string-row:nth-child(6) .string-line {
+  background: linear-gradient(180deg, var(--string-ring-bass), var(--string-ring-bass));
+  box-shadow: 0 0 8px rgba(200, 200, 200, 0.3);
 }
 
 @keyframes vibrate {
@@ -337,7 +384,7 @@ button.badge:hover {
 }
 
 /* ═══════════════════════════════════════════════════
-   KEYCAPS — 3D raised buttons
+   KEYCAPS — rosewood 3D buttons
    ═══════════════════════════════════════════════════ */
 .keycap,
 .chord-card,
@@ -364,13 +411,13 @@ button.badge:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 8px 2px 6px;
+  gap: 1px;
+  padding: 8px 2px 5px;
   background: var(--key-bg);
   border: 1px solid var(--key-border);
-  border-bottom: 3px solid var(--key-bottom);
-  border-radius: 8px;
-  transition: all 60ms;
+  border-bottom: 4px solid var(--key-bottom);
+  border-radius: 7px;
+  transition: all 50ms;
 }
 
 .keycap:hover {
@@ -380,12 +427,12 @@ button.badge:hover {
 }
 
 .keycap.active {
-  background: var(--accent);
+  background: linear-gradient(180deg, var(--accent-bright) 0%, var(--accent) 100%);
   border-color: var(--accent-bright);
-  border-bottom-width: 1px;
+  border-bottom: 1px solid var(--accent-bright);
   padding-bottom: 8px;
-  transform: translateY(2px);
-  box-shadow: 0 0 14px var(--accent-glow-strong);
+  transform: translateY(3px);
+  box-shadow: 0 0 18px var(--accent-glow-strong);
 }
 
 .keycap.active .key-label,
@@ -393,13 +440,32 @@ button.badge:hover {
   color: var(--active-text);
 }
 
+/* Bone-white nut on open fret */
 .keycap-open {
-  border-left: 3px solid var(--nut-border);
   background: var(--nut-bg);
+  border-color: var(--nut-border);
+  border-left: 4px solid var(--nut-border);
+  border-bottom-color: var(--key-bottom);
+}
+
+.keycap-open .key-label,
+.keycap-open .note-label {
+  color: var(--nut-text);
 }
 
 .keycap-open:hover {
-  background: var(--key-bg-hover);
+  background: var(--nut-border);
+}
+
+.keycap-open.active {
+  background: linear-gradient(180deg, var(--accent-bright) 0%, var(--accent) 100%);
+  border-color: var(--accent-bright);
+  border-left-width: 1px;
+}
+
+.keycap-open.active .key-label,
+.keycap-open.active .note-label {
+  color: var(--active-text);
 }
 
 .key-label {
@@ -413,19 +479,27 @@ button.badge:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 /* ═══════════════════════════════════════════════════
    CHORD PANEL
    ═══════════════════════════════════════════════════ */
 .chord-panel {
-  background: linear-gradient(135deg, var(--fret-wood-hi) 0%, var(--fret-wood-lo) 100%);
+  background:
+    linear-gradient(
+      160deg,
+      var(--fret-wood-hi) 0%,
+      var(--fret-wood-lo) 40%,
+      var(--fret-wood-hi) 60%,
+      var(--fret-wood-lo) 100%
+    );
   border: 2px solid var(--panel-border);
   border-radius: 18px;
   padding: 24px 18px 16px;
   box-shadow:
-    0 8px 32px var(--panel-shadow),
-    inset 0 0 40px rgba(0, 0, 0, 0.15);
+    0 10px 40px var(--panel-shadow),
+    inset 0 2px 20px rgba(0, 0, 0, 0.2);
 }
 
 .chord-grid {
@@ -439,12 +513,12 @@ button.badge:hover {
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 16px 4px 12px;
+  padding: 16px 4px 10px;
   background: var(--key-bg);
   border: 1px solid var(--key-border);
-  border-bottom: 3px solid var(--key-bottom);
-  border-radius: 12px;
-  transition: all 60ms;
+  border-bottom: 4px solid var(--key-bottom);
+  border-radius: 10px;
+  transition: all 50ms;
 }
 
 .chord-card:hover {
@@ -454,11 +528,11 @@ button.badge:hover {
 }
 
 .chord-card.selected {
-  background: var(--accent);
+  background: linear-gradient(180deg, var(--accent-bright) 0%, var(--accent) 100%);
   border-color: var(--accent-bright);
-  border-bottom-width: 1px;
-  transform: translateY(2px);
-  box-shadow: 0 0 16px var(--accent-glow-strong);
+  border-bottom: 1px solid var(--accent-bright);
+  transform: translateY(3px);
+  box-shadow: 0 0 18px var(--accent-glow-strong);
 }
 
 .chord-card.selected .chord-hotkey,
@@ -475,18 +549,20 @@ button.badge:hover {
 }
 
 .chord-name {
-  font-size: 22px;
-  font-weight: 800;
+  font-size: 24px;
+  font-weight: 900;
+  font-family: 'Georgia', serif;
 }
 
 .chord-roman {
   font-size: 11px;
   color: var(--muted);
   font-weight: 500;
+  font-style: italic;
 }
 
 /* ═══════════════════════════════════════════════════
-   PLUCK / VARIANT / STRUM ROWS
+   PLUCK / VARIANT / STRUM
    ═══════════════════════════════════════════════════ */
 .pluck-row {
   display: flex;
@@ -502,6 +578,7 @@ button.badge:hover {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .pluck-key {
@@ -509,13 +586,13 @@ button.badge:hover {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding: 6px 0 4px;
+  padding: 6px 0 3px;
   width: 58px;
   background: var(--key-bg);
   border: 1px solid var(--key-border);
-  border-bottom: 3px solid var(--key-bottom);
-  border-radius: 8px;
-  transition: all 60ms;
+  border-bottom: 4px solid var(--key-bottom);
+  border-radius: 7px;
+  transition: all 50ms;
 }
 
 .pluck-key:hover {
@@ -524,10 +601,10 @@ button.badge:hover {
 }
 
 .pluck-key.active {
-  background: var(--accent);
+  background: linear-gradient(180deg, var(--accent-bright), var(--accent));
   border-color: var(--accent-bright);
-  border-bottom-width: 1px;
-  box-shadow: 0 0 12px var(--accent-glow-strong);
+  border-bottom: 1px solid var(--accent-bright);
+  box-shadow: 0 0 14px var(--accent-glow-strong);
 }
 
 .pluck-key.active .key-label,
@@ -540,13 +617,13 @@ button.badge:hover {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding: 5px 0 3px;
+  padding: 5px 0 2px;
   width: 52px;
   background: var(--key-bg);
   border: 1px solid var(--key-border);
-  border-bottom: 3px solid var(--key-bottom);
-  border-radius: 8px;
-  transition: all 60ms;
+  border-bottom: 4px solid var(--key-bottom);
+  border-radius: 7px;
+  transition: all 50ms;
 }
 
 .variant-key:hover {
@@ -563,10 +640,10 @@ button.badge:hover {
 }
 
 .variant-key.active {
-  background: var(--accent);
+  background: linear-gradient(180deg, var(--accent-bright), var(--accent));
   border-color: var(--accent-bright);
-  border-bottom-width: 1px;
-  box-shadow: 0 0 10px var(--accent-glow-strong);
+  border-bottom: 1px solid var(--accent-bright);
+  box-shadow: 0 0 12px var(--accent-glow-strong);
 }
 
 .variant-key.active .key-label,
@@ -578,11 +655,11 @@ button.badge:hover {
   padding: 10px 20px;
   background: var(--key-bg);
   border: 1px solid var(--key-border);
-  border-bottom: 3px solid var(--key-bottom);
-  border-radius: 8px;
+  border-bottom: 4px solid var(--key-bottom);
+  border-radius: 7px;
   font-size: 14px;
   font-weight: 600;
-  transition: all 60ms;
+  transition: all 50ms;
 }
 
 .strum-btn:hover {
@@ -591,11 +668,11 @@ button.badge:hover {
 }
 
 .strum-btn:active {
-  background: var(--accent);
+  background: linear-gradient(180deg, var(--accent-bright), var(--accent));
   color: var(--active-text);
-  border-bottom-width: 1px;
-  transform: translateY(2px);
-  box-shadow: 0 0 12px var(--accent-glow-strong);
+  border-bottom: 1px solid var(--accent-bright);
+  transform: translateY(3px);
+  box-shadow: 0 0 14px var(--accent-glow-strong);
 }
 
 .chord-help {
@@ -606,20 +683,21 @@ button.badge:hover {
 }
 
 /* ═══════════════════════════════════════════════════
-   FOOTER HINTS — now a visible panel
+   FOOTER HINTS
    ═══════════════════════════════════════════════════ */
 .hints {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
-  margin-top: 20px;
+  margin-top: 22px;
   padding: 14px 18px;
   font-size: 12px;
   color: var(--muted);
   background: var(--panel);
   border: 1px solid var(--panel-border);
   border-radius: 12px;
-  border-top: 2px solid var(--accent-dim);
+  border-top: 3px solid var(--accent-dim);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 kbd {
@@ -648,7 +726,7 @@ kbd {
   .fret-numbers,
   .string-row,
   .fret-markers {
-    grid-template-columns: 26px repeat(10, 1fr);
+    grid-template-columns: 28px repeat(10, 1fr);
     gap: 3px;
   }
   .fretboard,
@@ -657,8 +735,9 @@ kbd {
     border-radius: 12px;
   }
   .keycap {
-    padding: 6px 0 4px;
-    border-radius: 6px;
+    padding: 6px 0 3px;
+    border-radius: 5px;
+    border-bottom-width: 3px;
   }
   .key-label {
     font-size: 12px;
@@ -667,10 +746,10 @@ kbd {
     font-size: 9px;
   }
   .string-line {
-    left: 30px;
+    left: 32px;
   }
   .string-label {
-    font-size: 12px;
+    font-size: 11px;
   }
   .chord-grid {
     gap: 5px;
@@ -682,7 +761,7 @@ kbd {
     gap: 4px;
   }
   .pluck-label {
-    width: 30px;
+    width: 28px;
     font-size: 10px;
   }
   .pluck-key,
@@ -700,8 +779,8 @@ kbd {
     border-radius: 8px;
   }
   .fret-dot {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
   }
 }
 
@@ -720,11 +799,13 @@ kbd {
   font-weight: 700;
   transition: all 120ms;
   letter-spacing: 0.5px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .playbook-btn:hover {
   background: var(--accent);
   color: var(--active-text);
+  box-shadow: 0 0 14px var(--accent-glow-strong);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -734,7 +815,7 @@ kbd {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(10, 8, 4, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -752,7 +833,7 @@ kbd {
 .playbook-modal {
   background: var(--panel);
   border: 2px solid var(--panel-border);
-  border-top: 3px solid var(--accent);
+  border-top: 4px solid var(--accent);
   border-radius: 18px;
   max-width: 680px;
   width: 100%;
@@ -760,11 +841,11 @@ kbd {
   display: flex;
   flex-direction: column;
   animation: modal-in 250ms ease-out;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
 }
 
 @keyframes modal-in {
-  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
@@ -778,9 +859,10 @@ kbd {
 
 .playbook-header h2 {
   margin: 0;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 900;
   color: var(--accent);
+  font-family: 'Georgia', serif;
 }
 
 .playbook-close {
@@ -828,7 +910,8 @@ kbd {
   padding-bottom: 8px;
   border-bottom: 2px solid var(--panel-border);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .playbook-section p {

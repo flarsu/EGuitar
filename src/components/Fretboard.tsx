@@ -44,7 +44,7 @@ export function Fretboard({ windowOffset, octave, activeKeys, onPluck, onRelease
             <span className="string-label">{string.name}</span>
             <div
               className="string-line"
-              style={{ height: `${1.5 + stringIndex * 0.5}px` }}
+              style={{ height: `${1.2 + stringIndex * 0.6}px` }}
             />
             {rowKeys.map((code, fret) => {
               const midi = string.midi + fret + 12 * octave
