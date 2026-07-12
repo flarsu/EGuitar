@@ -134,12 +134,41 @@ export const SCALE_ORDER: ScaleType[] = [
   'harmonicMinor',
 ]
 
-/** Map each pitch class in the scale to its degree label, for fretboard overlay. */
-export function scaleDegreeByPitchClass(root: number, type: ScaleType): Map<number, string> {
+// Indian sargam (swara) naming. The 7 base swaras each get their own color;
+// komal (flat) and tivra (sharp) variants share the base swara's color.
+export interface Swara {
+  name: string // Sa, Re, Ga, Ma, Pa, Dha, Ni
+  alt?: string // ♭ komal, ♯ tivra
+  index: number // 0..6 → color slot
+}
+
+export const SWARA_NAMES = ['Sa', 'Re', 'Ga', 'Ma', 'Pa', 'Dha', 'Ni']
+
+const DEGREE_TO_SWARA: Record<string, Swara> = {
+  '1': { name: 'Sa', index: 0 },
+  '2': { name: 'Re', index: 1 },
+  b3: { name: 'Ga', alt: '♭', index: 2 },
+  '3': { name: 'Ga', index: 2 },
+  '4': { name: 'Ma', index: 3 },
+  b5: { name: 'Ma', alt: '♯', index: 3 },
+  '5': { name: 'Pa', index: 4 },
+  b6: { name: 'Dha', alt: '♭', index: 5 },
+  '6': { name: 'Dha', index: 5 },
+  b7: { name: 'Ni', alt: '♭', index: 6 },
+  '7': { name: 'Ni', index: 6 },
+}
+
+/** Map each pitch class in the scale to its swara, for the fretboard overlay. */
+export function scaleSwaraByPitchClass(root: number, type: ScaleType): Map<number, Swara> {
   const def = SCALES[type]
-  const map = new Map<number, string>()
+  const map = new Map<number, Swara>()
   def.intervals.forEach((interval, i) => {
-    map.set((root + interval) % 12, def.degrees[i])
+    map.set((root + interval) % 12, DEGREE_TO_SWARA[def.degrees[i]])
   })
   return map
+}
+
+/** Ordered swaras of a scale (Sa → Ni), for the legend. */
+export function scaleSwaraList(type: ScaleType): Swara[] {
+  return SCALES[type].degrees.map((d) => DEGREE_TO_SWARA[d])
 }

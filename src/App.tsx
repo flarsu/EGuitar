@@ -12,7 +12,8 @@ import { KEY_TO_POSITION } from './input/keymap'
 import {
   STANDARD_TUNING,
   diatonicChord,
-  scaleDegreeByPitchClass,
+  scaleSwaraByPitchClass,
+  scaleSwaraList,
   type ChordVariant,
   type ScaleType,
 } from './music/theory'
@@ -124,7 +125,7 @@ export default function App() {
     )
   }, [octave, windowOffset, volume, engineId, mode, keyRoot, preset, theme, scaleOn, scaleRoot, scaleType])
 
-  const scaleDegrees = scaleDegreeByPitchClass(scaleRoot, scaleType)
+  const scaleSwaras = scaleSwaraByPitchClass(scaleRoot, scaleType)
 
   const toggleTabRecording = useCallback(() => {
     if (tabRecording) {
@@ -350,6 +351,7 @@ export default function App() {
             scaleOn={scaleOn}
             scaleRoot={scaleRoot}
             scaleType={scaleType}
+            swaras={scaleSwaraList(scaleType)}
             onToggle={() => setScaleOn((s) => !s)}
             onRoot={(delta) => setScaleRoot((r) => (r + delta + 12) % 12)}
             onType={setScaleType}
@@ -362,7 +364,7 @@ export default function App() {
             onRelease={release}
             scaleOn={scaleOn}
             scaleRoot={scaleRoot}
-            scaleDegrees={scaleDegrees}
+            scaleSwaras={scaleSwaras}
           />
         </>
       ) : (

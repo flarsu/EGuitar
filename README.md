@@ -23,7 +23,7 @@ In chord mode: `1–7` pick (and strum) the diatonic chords of the selected key,
 
 ## Scale overlay
 
-Turn on the scale bar above the fretboard (lead mode) to light up every note of a scale across the neck. Pick a root (e.g. A) and a scale type — major, natural minor, major/minor pentatonic, blues, dorian, mixolydian, or harmonic minor. Root notes are filled solid and marked degree `1` so you can see where the scale starts and ends; the other scale tones are outlined with their degree numbers, and off-scale frets dim out so the shape stands out. It's a learning overlay only — you still play normally underneath it.
+Turn on the scale bar above the fretboard (lead mode) to light up every note of a scale across the neck. Pick a root (e.g. A) and a scale type — major, natural minor, major/minor pentatonic, blues, dorian, mixolydian, or harmonic minor. Each scale degree is colored by its Indian sargam swara — Sa (red), Re (orange), Ga (yellow), Ma (green), Pa (teal), Dha (blue), Ni (violet) — so you can tell the notes apart at a glance, with the swara name on each fret and the western note in the corner. Sa (the root) carries a glow ring so you can see where the scale starts and ends, komal/tivra notes keep their swara's color with a ♭/♯ marker, and off-scale frets dim out. It's a learning overlay only — you still play normally underneath it.
 
 The header has tone presets (Acoustic / Clean / Drive — EQ, reverb, and overdrive on a shared effects chain) and a `● Rec` button that records your playing and downloads it as a `.webm` audio file. Settings (octave, mode, key, engine, preset, volume) persist across visits via localStorage.
 

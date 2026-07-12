@@ -1,15 +1,16 @@
-import { NOTE_NAMES, SCALES, SCALE_ORDER, type ScaleType } from '../music/theory'
+import { NOTE_NAMES, SCALES, SCALE_ORDER, type ScaleType, type Swara } from '../music/theory'
 
 interface Props {
   scaleOn: boolean
   scaleRoot: number
   scaleType: ScaleType
+  swaras: Swara[]
   onToggle(): void
   onRoot(delta: number): void
   onType(type: ScaleType): void
 }
 
-export function ScaleBar({ scaleOn, scaleRoot, scaleType, onToggle, onRoot, onType }: Props) {
+export function ScaleBar({ scaleOn, scaleRoot, scaleType, swaras, onToggle, onRoot, onType }: Props) {
   return (
     <div className={'scale-bar' + (scaleOn ? ' on' : '')}>
       <button
@@ -45,17 +46,13 @@ export function ScaleBar({ scaleOn, scaleRoot, scaleType, onToggle, onRoot, onTy
             ))}
           </select>
 
-          <span className="scale-current">
-            {NOTE_NAMES[scaleRoot]} {SCALES[scaleType].name}
-          </span>
-
-          <span className="scale-legend">
-            <span className="legend-item">
-              <span className="legend-swatch root" /> root
-            </span>
-            <span className="legend-item">
-              <span className="legend-swatch note" /> scale note
-            </span>
+          <span className="swara-legend">
+            {swaras.map((swara, i) => (
+              <span key={i} className={`swara-chip swara-${swara.index}`}>
+                {swara.name}
+                {swara.alt && <sup className="swara-alt">{swara.alt}</sup>}
+              </span>
+            ))}
           </span>
         </>
       )}

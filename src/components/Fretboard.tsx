@@ -1,6 +1,6 @@
 import type { PointerEvent } from 'react'
 import { ROWS, KEY_LABELS } from '../input/keymap'
-import { STANDARD_TUNING, midiToName } from '../music/theory'
+import { STANDARD_TUNING, midiToName, type Swara } from '../music/theory'
 
 const MARKER_FRETS = new Set([3, 5, 7, 9])
 
@@ -12,7 +12,7 @@ interface Props {
   onRelease(code: string): void
   scaleOn: boolean
   scaleRoot: number
-  scaleDegrees: Map<number, string>
+  scaleSwaras: Map<number, Swara>
 }
 
 export function Fretboard({
@@ -23,7 +23,7 @@ export function Fretboard({
   onRelease,
   scaleOn,
   scaleRoot,
-  scaleDegrees,
+  scaleSwaras,
 }: Props) {
   const press = (e: PointerEvent, code: string) => {
     e.preventDefault()
@@ -62,8 +62,8 @@ export function Fretboard({
               const midi = string.midi + fret + 12 * octave
               const pc = midi % 12
               const active = activeKeys.has(code)
-              const degree = scaleOn ? scaleDegrees.get(pc) : undefined
-              const inScale = degree !== undefined
+              const swara = scaleOn ? scaleSwaras.get(pc) : undefined
+              const inScale = swara !== undefined
               const isRoot = inScale && pc === scaleRoot
               return (
                 <button
@@ -73,6 +73,7 @@ export function Fretboard({
                     (active ? ' active' : '') +
                     (fret === 0 ? ' keycap-open' : '') +
                     (inScale ? ' in-scale' : '') +
+                    (swara ? ` swara-${swara.index}` : '') +
                     (isRoot ? ' scale-root' : '')
                   }
                   onPointerDown={(e) => press(e, code)}
@@ -82,10 +83,17 @@ export function Fretboard({
                   onContextMenu={(e) => e.preventDefault()}
                 >
                   <span className="key-label">{KEY_LABELS[code]}</span>
-                  <span className="note-label">
-                    {scaleOn && inScale ? midiToName(midi).replace(/\d/g, '') : midiToName(midi)}
-                  </span>
-                  {scaleOn && inScale && <span className="scale-degree">{degree}</span>}
+                  {scaleOn && swara ? (
+                    <span className="note-label swara-name">
+                      {swara.name}
+                      {swara.alt && <sup className="swara-alt">{swara.alt}</sup>}
+                    </span>
+                  ) : (
+                    <span className="note-label">{midiToName(midi)}</span>
+                  )}
+                  {scaleOn && swara && (
+                    <span className="scale-degree">{midiToName(midi).replace(/\d/g, '')}</span>
+                  )}
                 </button>
               )
             })}

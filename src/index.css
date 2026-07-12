@@ -40,6 +40,15 @@
   --scale-root-border: #5fe8d6;
   --scale-root-text: #06231f;
   --scale-glow: rgba(47, 180, 164, 0.5);
+  /* Sargam swara colors (Sa Re Ga Ma Pa Dha Ni) — shared across themes */
+  --swara-0: #ff7a7a;
+  --swara-1: #ffab5e;
+  --swara-2: #f2d24b;
+  --swara-3: #74d174;
+  --swara-4: #5ecfcf;
+  --swara-5: #7aa8ff;
+  --swara-6: #c294f0;
+  --swara-ink: #1a1206;
   color-scheme: dark;
 }
 
