@@ -426,6 +426,46 @@ button.badge:hover {
   border-bottom-color: var(--accent-dim);
 }
 
+/* Scale overlay — sits before .active so a pressed key still shows amber */
+.keycap.in-scale {
+  background: var(--scale-note-bg);
+  border-color: var(--scale-note-border);
+}
+
+.keycap.in-scale .note-label {
+  color: var(--scale-note-text);
+  font-weight: 700;
+}
+
+.scale-degree {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  font-size: 8px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--scale-note-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.keycap.scale-root {
+  background: var(--scale-root-bg);
+  border-color: var(--scale-root-border);
+  border-bottom-color: var(--scale-root-border);
+  box-shadow: 0 0 14px var(--scale-glow);
+}
+
+.keycap.scale-root .key-label,
+.keycap.scale-root .note-label,
+.keycap.scale-root .scale-degree {
+  color: var(--scale-root-text);
+}
+
+/* Dim the non-scale keys so the shape pops when a scale is shown */
+.fretboard.scale-mode .keycap:not(.in-scale):not(.active) {
+  opacity: 0.4;
+}
+
 .keycap.active {
   background: linear-gradient(180deg, var(--accent-bright) 0%, var(--accent) 100%);
   border-color: var(--accent-bright);
@@ -480,6 +520,143 @@ button.badge:hover {
   font-variant-numeric: tabular-nums;
   font-weight: 500;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ═══════════════════════════════════════════════════
+   SCALE BAR
+   ═══════════════════════════════════════════════════ */
+.scale-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+}
+
+.scale-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--panel-border);
+  background: var(--key-bg);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.scale-toggle.on {
+  background: var(--scale-root-bg);
+  border-color: var(--scale-root-border);
+  color: var(--scale-root-text);
+}
+
+.scale-dot-legend {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--scale-note-border);
+}
+
+.scale-toggle.on .scale-dot-legend {
+  background: var(--scale-root-text);
+}
+
+.scale-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.scale-stepper button {
+  font: inherit;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--key-border);
+  background: var(--key-bg);
+  color: var(--text);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.scale-stepper button:active {
+  background: var(--scale-note-border);
+  color: var(--active-text);
+}
+
+.scale-root-name {
+  min-width: 28px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--scale-note-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.scale-select {
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--panel-border);
+  background: var(--key-bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.scale-current {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.scale-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid var(--scale-note-border);
+}
+
+.legend-swatch.note {
+  background: var(--scale-note-bg);
+}
+
+.legend-swatch.root {
+  background: var(--scale-root-bg);
+  border-color: var(--scale-root-border);
+}
+
+@media (max-width: 640px) {
+  .scale-legend {
+    margin-left: 0;
+    width: 100%;
+  }
+  .scale-current {
+    display: none;
+  }
 }
 
 /* ═══════════════════════════════════════════════════

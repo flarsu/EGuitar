@@ -92,3 +92,54 @@ export function diatonicChord(
     midis: VOICINGS[quality].map((interval) => root + interval),
   }
 }
+
+// ─── Scales ──────────────────────────────────────────────────────────
+export type ScaleType =
+  | 'major'
+  | 'minor'
+  | 'majorPentatonic'
+  | 'minorPentatonic'
+  | 'blues'
+  | 'dorian'
+  | 'mixolydian'
+  | 'harmonicMinor'
+
+export interface ScaleDef {
+  name: string
+  short: string
+  // Semitone intervals from the root. Degree labels line up index-for-index.
+  intervals: number[]
+  degrees: string[]
+}
+
+export const SCALES: Record<ScaleType, ScaleDef> = {
+  major: { name: 'Major (Ionian)', short: 'maj', intervals: [0, 2, 4, 5, 7, 9, 11], degrees: ['1', '2', '3', '4', '5', '6', '7'] },
+  minor: { name: 'Natural minor', short: 'min', intervals: [0, 2, 3, 5, 7, 8, 10], degrees: ['1', '2', 'b3', '4', '5', 'b6', 'b7'] },
+  majorPentatonic: { name: 'Major pentatonic', short: 'maj pent', intervals: [0, 2, 4, 7, 9], degrees: ['1', '2', '3', '5', '6'] },
+  minorPentatonic: { name: 'Minor pentatonic', short: 'min pent', intervals: [0, 3, 5, 7, 10], degrees: ['1', 'b3', '4', '5', 'b7'] },
+  blues: { name: 'Blues', short: 'blues', intervals: [0, 3, 5, 6, 7, 10], degrees: ['1', 'b3', '4', 'b5', '5', 'b7'] },
+  dorian: { name: 'Dorian', short: 'dorian', intervals: [0, 2, 3, 5, 7, 9, 10], degrees: ['1', '2', 'b3', '4', '5', '6', 'b7'] },
+  mixolydian: { name: 'Mixolydian', short: 'mixo', intervals: [0, 2, 4, 5, 7, 9, 10], degrees: ['1', '2', '3', '4', '5', '6', 'b7'] },
+  harmonicMinor: { name: 'Harmonic minor', short: 'harm min', intervals: [0, 2, 3, 5, 7, 8, 11], degrees: ['1', '2', 'b3', '4', '5', 'b6', '7'] },
+}
+
+export const SCALE_ORDER: ScaleType[] = [
+  'major',
+  'minor',
+  'majorPentatonic',
+  'minorPentatonic',
+  'blues',
+  'dorian',
+  'mixolydian',
+  'harmonicMinor',
+]
+
+/** Map each pitch class in the scale to its degree label, for fretboard overlay. */
+export function scaleDegreeByPitchClass(root: number, type: ScaleType): Map<number, string> {
+  const def = SCALES[type]
+  const map = new Map<number, string>()
+  def.intervals.forEach((interval, i) => {
+    map.set((root + interval) % 12, def.degrees[i])
+  })
+  return map
+}

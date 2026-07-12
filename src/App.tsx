@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Controls } from './components/Controls'
 import { Fretboard } from './components/Fretboard'
+import { ScaleBar } from './components/ScaleBar'
 import { ChordPanel } from './components/ChordPanel'
 import { KeyboardHints } from './components/KeyboardHints'
 import { TabView } from './components/TabView'
@@ -8,7 +9,13 @@ import { MicListener } from './components/MicListener'
 import { SongAnalyzer } from './components/SongAnalyzer'
 import { useGuitarKeyboard, type PlayMode } from './input/keyboard'
 import { KEY_TO_POSITION } from './input/keymap'
-import { STANDARD_TUNING, diatonicChord, type ChordVariant } from './music/theory'
+import {
+  STANDARD_TUNING,
+  diatonicChord,
+  scaleDegreeByPitchClass,
+  type ChordVariant,
+  type ScaleType,
+} from './music/theory'
 import { KarplusStrongEngine } from './audio/karplus'
 import { SamplerEngine } from './audio/sampler'
 import { VoiceManager } from './audio/voices'
@@ -28,6 +35,9 @@ interface SavedSettings {
   keyRoot: number
   preset: TonePreset
   theme: Theme
+  scaleOn: boolean
+  scaleRoot: number
+  scaleType: ScaleType
 }
 
 function loadSettings(): Partial<SavedSettings> {
@@ -69,6 +79,9 @@ export default function App() {
   const [chordVariant, setChordVariant] = useState<ChordVariant>('auto')
   const [preset, setPreset] = useState<TonePreset>(saved.preset ?? 'acoustic')
   const [theme, setTheme] = useState<Theme>(saved.theme ?? 'dark')
+  const [scaleOn, setScaleOn] = useState(saved.scaleOn ?? false)
+  const [scaleRoot, setScaleRoot] = useState(saved.scaleRoot ?? 9) // A
+  const [scaleType, setScaleType] = useState<ScaleType>(saved.scaleType ?? 'major')
   const [pluckedStrings, setPluckedStrings] = useState<Set<number>>(new Set())
   const [tabRecording, setTabRecording] = useState(false)
   const [tabSheet, setTabSheet] = useState<TabSheet | null>(null)
@@ -104,9 +117,14 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem(
       SETTINGS_KEY,
-      JSON.stringify({ octave, windowOffset, volume, engineId, mode, keyRoot, preset, theme }),
+      JSON.stringify({
+        octave, windowOffset, volume, engineId, mode, keyRoot, preset, theme,
+        scaleOn, scaleRoot, scaleType,
+      }),
     )
-  }, [octave, windowOffset, volume, engineId, mode, keyRoot, preset, theme])
+  }, [octave, windowOffset, volume, engineId, mode, keyRoot, preset, theme, scaleOn, scaleRoot, scaleType])
+
+  const scaleDegrees = scaleDegreeByPitchClass(scaleRoot, scaleType)
 
   const toggleTabRecording = useCallback(() => {
     if (tabRecording) {
@@ -327,13 +345,26 @@ export default function App() {
         onKeyChange={changeKey}
       />
       {mode === 'lead' ? (
-        <Fretboard
-          windowOffset={windowOffset}
-          octave={octave}
-          activeKeys={activeKeys}
-          onPluck={pluck}
-          onRelease={release}
-        />
+        <>
+          <ScaleBar
+            scaleOn={scaleOn}
+            scaleRoot={scaleRoot}
+            scaleType={scaleType}
+            onToggle={() => setScaleOn((s) => !s)}
+            onRoot={(delta) => setScaleRoot((r) => (r + delta + 12) % 12)}
+            onType={setScaleType}
+          />
+          <Fretboard
+            windowOffset={windowOffset}
+            octave={octave}
+            activeKeys={activeKeys}
+            onPluck={pluck}
+            onRelease={release}
+            scaleOn={scaleOn}
+            scaleRoot={scaleRoot}
+            scaleDegrees={scaleDegrees}
+          />
+        </>
       ) : (
         <ChordPanel
           keyRoot={keyRoot}

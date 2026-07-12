@@ -10,15 +10,27 @@ interface Props {
   activeKeys: Set<string>
   onPluck(code: string): void
   onRelease(code: string): void
+  scaleOn: boolean
+  scaleRoot: number
+  scaleDegrees: Map<number, string>
 }
 
-export function Fretboard({ windowOffset, octave, activeKeys, onPluck, onRelease }: Props) {
+export function Fretboard({
+  windowOffset,
+  octave,
+  activeKeys,
+  onPluck,
+  onRelease,
+  scaleOn,
+  scaleRoot,
+  scaleDegrees,
+}: Props) {
   const press = (e: PointerEvent, code: string) => {
     e.preventDefault()
     onPluck(code)
   }
   return (
-    <main className="fretboard">
+    <main className={'fretboard' + (scaleOn ? ' scale-mode' : '')}>
       <div className="fret-numbers">
         <span />
         {Array.from({ length: 10 }, (_, fret) => (
@@ -48,14 +60,20 @@ export function Fretboard({ windowOffset, octave, activeKeys, onPluck, onRelease
             />
             {rowKeys.map((code, fret) => {
               const midi = string.midi + fret + 12 * octave
+              const pc = midi % 12
               const active = activeKeys.has(code)
+              const degree = scaleOn ? scaleDegrees.get(pc) : undefined
+              const inScale = degree !== undefined
+              const isRoot = inScale && pc === scaleRoot
               return (
                 <button
                   key={code}
                   className={
                     'keycap' +
                     (active ? ' active' : '') +
-                    (fret === 0 ? ' keycap-open' : '')
+                    (fret === 0 ? ' keycap-open' : '') +
+                    (inScale ? ' in-scale' : '') +
+                    (isRoot ? ' scale-root' : '')
                   }
                   onPointerDown={(e) => press(e, code)}
                   onPointerUp={() => onRelease(code)}
@@ -64,7 +82,10 @@ export function Fretboard({ windowOffset, octave, activeKeys, onPluck, onRelease
                   onContextMenu={(e) => e.preventDefault()}
                 >
                   <span className="key-label">{KEY_LABELS[code]}</span>
-                  <span className="note-label">{midiToName(midi)}</span>
+                  <span className="note-label">
+                    {scaleOn && inScale ? midiToName(midi).replace(/\d/g, '') : midiToName(midi)}
+                  </span>
+                  {scaleOn && inScale && <span className="scale-degree">{degree}</span>}
                 </button>
               )
             })}

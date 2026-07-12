@@ -33,6 +33,13 @@
   --nut-bg: #e8dcc8;
   --nut-border: #d0c4a8;
   --nut-text: #3a2e1e;
+  --scale-note-bg: rgba(45, 180, 165, 0.16);
+  --scale-note-border: #2fb4a4;
+  --scale-note-text: #74e2d2;
+  --scale-root-bg: linear-gradient(180deg, #2ec4b2 0%, #1f9c8c 100%);
+  --scale-root-border: #5fe8d6;
+  --scale-root-text: #06231f;
+  --scale-glow: rgba(47, 180, 164, 0.5);
   color-scheme: dark;
 }
 
@@ -70,6 +77,13 @@
   --nut-bg: #d4c8b0;
   --nut-border: #b8a888;
   --nut-text: #3a2e1e;
+  --scale-note-bg: rgba(20, 140, 125, 0.16);
+  --scale-note-border: #1a9683;
+  --scale-note-text: #0c6d5f;
+  --scale-root-bg: linear-gradient(180deg, #189683 0%, #0f7767 100%);
+  --scale-root-border: #0c6d5f;
+  --scale-root-text: #ffffff;
+  --scale-glow: rgba(21, 150, 131, 0.4);
   color-scheme: light;
 }
 

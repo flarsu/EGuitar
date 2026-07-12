@@ -21,6 +21,10 @@ Acoustic samples are from [tonejs-instruments](https://github.com/nbrosowsky/ton
 
 In chord mode: `1–7` pick (and strum) the diatonic chords of the selected key, `Q`–`P` pick the chord shape (key-default triad, sus2, sus4, 7, maj7, m7, add9, 6, forced maj/min — e.g. `2`+`E` = Dsus4, `2`+`U` = Dadd9 in C), `Space` strums down, `⏎ Enter` strums up, `⌥`+`Space` chucks (percussive muted strum), `Z`–`N` fingerpick individual strings of the current chord (low E → high e), `←`/`→` change key.
 
+## Scale overlay
+
+Turn on the scale bar above the fretboard (lead mode) to light up every note of a scale across the neck. Pick a root (e.g. A) and a scale type — major, natural minor, major/minor pentatonic, blues, dorian, mixolydian, or harmonic minor. Root notes are filled solid and marked degree `1` so you can see where the scale starts and ends; the other scale tones are outlined with their degree numbers, and off-scale frets dim out so the shape stands out. It's a learning overlay only — you still play normally underneath it.
+
 The header has tone presets (Acoustic / Clean / Drive — EQ, reverb, and overdrive on a shared effects chain) and a `● Rec` button that records your playing and downloads it as a `.webm` audio file. Settings (octave, mode, key, engine, preset, volume) persist across visits via localStorage.
 
 ## Develop
